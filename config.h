@@ -5,26 +5,33 @@ static const unsigned int borderpx = 1; /* border pixel of windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int showbar = 1;           /* 0 means no bar */
 static const int topbar = 1;            /* 0 means bottom bar */
+static const int horizpadbar = 2;       /* horizontal padding for statusbar */
+static const int vertpadbar = 0;        /* vertical padding for statusbar */
 static const char *fonts[] = {"monospace:size=10"};
 static const char dmenufont[] = "monospace:size=10";
+// delete this after delete dmenu
 static const char col_gray1[] = "#000000"; /*black bg normal mod*/
 static const char col_gray2[] = "#000000"; /*black bg border*/
 static const char col_gray3[] = "#444444";
 static const char col_gray4[] = "#eeeeee";
-static const char col_cyan[] = "#ff0000"; /*red bg selctor and selected window*/
-// static const unsigned int baralpha = 0xd0;
+static const char col_cyan[] = "#ff0000"; /*red bg selctor and selected
+// window*/
+//  static const unsigned int baralpha = 0xd0;
 static const unsigned int baralpha = 0x00U;     /*alpha patch variables*/
 static const unsigned int borderalpha = OPAQUE; /*alpha patch variables*/
-static const char *colors[][3] = {
-    /*               fg         bg         border   */
-    [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
-    [SchemeSel] = {col_gray4, col_cyan, col_cyan},
-};
+
+#include "colors/cccp_dark.h"
+
+// static const char *colors[][3] = {
+/*               fg         bg         border   */
+//    [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
+//    [SchemeSel] = {col_gray4, col_gray1, col_cyan},
+//};
 
 static const unsigned int alphas[][3] = {
     /*               fg      bg        border*/
     [SchemeNorm] = {OPAQUE, baralpha, borderalpha},
-    [SchemeSel] = {OPAQUE, OPAQUE, borderalpha},
+    [SchemeSel] = {OPAQUE, baralpha, borderalpha},
 };
 
 static const char *const autostart[] = {
@@ -34,6 +41,15 @@ static const char *const autostart[] = {
 
 /* tagging */
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+static const unsigned int ulinepad =
+    5; /* horizontal padding between the underline and tag */
+static const unsigned int ulinestroke =
+    2; /* thickness / height of the underline */
+static const unsigned int ulinevoffset =
+    0; /* how far above the bottom of the bar the line should appear */
+static const int ulineall =
+    0; /* 1 to show underline on all tags, 0 for just the active ones */
 
 static const Rule rules[] = {
     /* xprop(1):
