@@ -5,9 +5,11 @@ static const unsigned int borderpx = 1; /* border pixel of windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int showbar = 1;           /* 0 means no bar */
 static const int topbar = 1;            /* 0 means bottom bar */
-static const int horizpadbar = 2;       /* horizontal padding for statusbar */
-static const int vertpadbar = 0;        /* vertical padding for statusbar */
-static const char *fonts[] = {"monospace:size=10"};
+static const int horizpadbar = 5;       /* horizontal padding for statusbar */
+static const int vertpadbar = 5;        /* vertical padding for statusbar */
+static const char *fonts[] = {
+    "Monolisa:size=12",
+    "Phosphor:style=regular:pixelsize=16:antialias=true:autohint=true"};
 static const char dmenufont[] = "monospace:size=10";
 // delete this after delete dmenu
 static const char col_gray1[] = "#000000"; /*black bg normal mod*/
@@ -40,7 +42,9 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+// static const char *tags[] = {"", "2", "3", "4", "5", "6", "7", "8", "9"};
+static const char *tags[] = {"", "", "", "", "",
+                             "", "", "", ""};
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -57,8 +61,11 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class      instance    title       tags mask     isfloating   monitor */
-    {"Gimp", NULL, NULL, 0, 1, -1},
-    {"Firefox", NULL, NULL, 1 << 8, 0, -1},
+    {"kitty", NULL, NULL, 1 << 0, 0, -1},
+    {"firefox", NULL, NULL, 1 << 1, 0, -1},
+    {"discord", NULL, NULL, 1 << 2, 0, -1},
+    {"Spotify", NULL, NULL, 1 << 8, 0, -1},
+
 };
 
 /* layout(s) */
@@ -69,11 +76,18 @@ static const int resizehints =
 static const int lockfullscreen =
     1; /* 1 will force focus on the fullscreen window */
 
+// static const Layout layouts[] = {
+/* symbol     arrange function */
+//    {"[]=", tile}, /* first entry is default */
+//    {"><>", NULL}, /* no layout function means floating behavior */
+//    {"[M]", monocle},
+//};
+
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {"[]=", tile}, /* first entry is default */
-    {"><>", NULL}, /* no layout function means floating behavior */
-    {"[M]", monocle},
+    {"", tile}, /* first entry is default */
+    {"", NULL}, /* no layout function means floating behavior */
+    {"", monocle},
 };
 
 /* key definitions */
@@ -97,10 +111,12 @@ static const char *dmenucmd[] = {
     "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
 static const char *termcmd[] = {"kitty", NULL};
+static const char *rofi[] = {"rofi", "-show", "drun", NULL};
 
 static const Key keys[] = {
     /* modifier                     key        function        argument */
-    {MODKEY, XK_p, spawn, {.v = dmenucmd}},
+    //    {MODKEY, XK_p, spawn, {.v = dmenucmd}},
+    {MODKEY, XK_p, spawn, {.v = rofi}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmd}},
     {MODKEY, XK_b, togglebar, {0}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
@@ -126,6 +142,7 @@ static const Key keys[] = {
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},
+    {MODKEY | ControlMask | ShiftMask, XK_q, quit, {1}},
 };
 
 /* button definitions */

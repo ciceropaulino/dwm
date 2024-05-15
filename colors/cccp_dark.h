@@ -6,5 +6,5 @@ static const char cccp_red[] = "#ff0000";
 static const char *colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = {mid_gray, total_black, dark_gray},
-    [SchemeSel] = {light_gray, total_black, cccp_red},
+    [SchemeSel] = {cccp_red, total_black, cccp_red},
 };
