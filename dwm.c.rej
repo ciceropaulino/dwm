@@ -1,26 +1,40 @@
 --- dwm.c
 +++ dwm.c
-@@ -646,6 +647,23 @@ createmon(void)
+@@ -1259,6 +1272,37 @@ propertynotify(XEvent *e)
+ 	}
  }
  
- void
-+cyclelayout(const Arg *arg) {
-+	Layout *l;
-+	for(l = (Layout *)layouts; l != selmon->lt[selmon->sellt]; l++);
-+	if(arg->i > 0) {
-+		if(l->symbol && (l + 1)->symbol)
-+			setlayout(&((Arg) { .v = (l + 1) }));
-+		else
-+			setlayout(&((Arg) { .v = layouts }));
-+	} else {
-+		if(l != layouts && (l - 1)->symbol)
-+			setlayout(&((Arg) { .v = (l - 1) }));
-+		else
-+			setlayout(&((Arg) { .v = &layouts[LENGTH(layouts) - 2] }));
++void
++pushdown(const Arg *arg) {
++	Client *sel = selmon->sel, *c;
++
++	if(!sel || sel->isfloating || sel == nexttiled(selmon->clients))
++		return;
++	if((c = nexttiled(sel->next))) {
++		detach(sel);
++		sel->next = c->next;
++		c->next = sel;
 +	}
++	focus(sel);
++	arrange(selmon);
 +}
 +
 +void
- destroynotify(XEvent *e)
++pushup(const Arg *arg) {
++	Client *sel = selmon->sel, *c;
++
++	if(!sel || sel->isfloating)
++		return;
++	if((c = prevtiled(sel)) && c != nexttiled(selmon->clients)) {
++		detach(sel);
++		sel->next = c;
++		for(c = selmon->clients; c->next != sel->next; c = c->next);
++		c->next = sel;
++	}
++	focus(sel);
++	arrange(selmon);
++}
++
+ void
+ quit(const Arg *arg)
  {
- 	Client *c;

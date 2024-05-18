@@ -221,7 +221,10 @@ static void movemouse(const Arg *arg);
 static Client *nexttagged(Client *c);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
+static Client *prevtiled(Client *c);
 static void propertynotify(XEvent *e);
+static void pushdown(const Arg *arg);
+static void pushup(const Arg *arg);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
@@ -910,70 +913,74 @@ void focus(Client *c) {
   drawbars();
 }
 
-void
-focusdir(const Arg *arg)
-{
-	Client *s = selmon->sel, *f = NULL, *c, *next;
+Client *prevtiled(Client *c) {
+  Client *p, *r;
 
-	if (!s)
-		return;
+  for (p = selmon->clients, r = NULL; p && p != c; p = p->next)
+    if (!p->isfloating && ISVISIBLE(p))
+      r = p;
+  return r;
+}
 
-	unsigned int score = -1;
-	unsigned int client_score;
-	int dist;
-	int dirweight = 20;
-	int isfloating = s->isfloating;
+void focusdir(const Arg *arg) {
+  Client *s = selmon->sel, *f = NULL, *c, *next;
 
-	next = s->next;
-	if (!next)
-		next = s->mon->clients;
-	for (c = next; c != s; c = next) {
+  if (!s)
+    return;
 
-		next = c->next;
-		if (!next)
-			next = s->mon->clients;
+  unsigned int score = -1;
+  unsigned int client_score;
+  int dist;
+  int dirweight = 20;
+  int isfloating = s->isfloating;
 
-		if (!ISVISIBLE(c) || c->isfloating != isfloating) // || HIDDEN(c)
-			continue;
+  next = s->next;
+  if (!next)
+    next = s->mon->clients;
+  for (c = next; c != s; c = next) {
 
-		switch (arg->i) {
-		case 0: // left
-			dist = s->x - c->x - c->w;
-			client_score =
-				dirweight * MIN(abs(dist), abs(dist + s->mon->ww)) +
-				abs(s->y - c->y);
-			break;
-		case 1: // right
-			dist = c->x - s->x - s->w;
-			client_score =
-				dirweight * MIN(abs(dist), abs(dist + s->mon->ww)) +
-				abs(c->y - s->y);
-			break;
-		case 2: // up
-			dist = s->y - c->y - c->h;
-			client_score =
-				dirweight * MIN(abs(dist), abs(dist + s->mon->wh)) +
-				abs(s->x - c->x);
-			break;
-		default:
-		case 3: // down
-			dist = c->y - s->y - s->h;
-			client_score =
-				dirweight * MIN(abs(dist), abs(dist + s->mon->wh)) +
-				abs(c->x - s->x);
-			break;
-		}
+    next = c->next;
+    if (!next)
+      next = s->mon->clients;
 
-		if (((arg->i == 0 || arg->i == 2) && client_score <= score) || client_score < score) {
-			score = client_score;
-			f = c;
-		}
-	}
+    if (!ISVISIBLE(c) || c->isfloating != isfloating) // || HIDDEN(c)
+      continue;
 
-	if (f && f != s) {
-		focus(f);
-		restack(f->mon);
-	}
+    switch (arg->i) {
+    case 0: // left
+      dist = s->x - c->x - c->w;
+      client_score =
+          dirweight * MIN(abs(dist), abs(dist + s->mon->ww)) + abs(s->y - c->y);
+      break;
+    case 1: // right
+      dist = c->x - s->x - s->w;
+      client_score =
+          dirweight * MIN(abs(dist), abs(dist + s->mon->ww)) + abs(c->y - s->y);
+      break;
+    case 2: // up
+      dist = s->y - c->y - c->h;
+      client_score =
+          dirweight * MIN(abs(dist), abs(dist + s->mon->wh)) + abs(s->x - c->x);
+      break;
+    default:
+    case 3: // down
+      dist = c->y - s->y - s->h;
+      client_score =
+          dirweight * MIN(abs(dist), abs(dist + s->mon->wh)) + abs(c->x - s->x);
+      break;
+    }
+
+    if (((arg->i == 0 || arg->i == 2) && client_score <= score) ||
+        client_score < score) {
+      score = client_score;
+      f = c;
+    }
+  }
+
+  if (f && f != s) {
+    focus(f);
+    restack(f->mon);
+  }
 }
 
 /* there are some broken focus acquiring clients needing extra handling */
@@ -1389,6 +1396,36 @@ void propertynotify(XEvent *e) {
     if (ev->atom == netatom[NetWMWindowType])
       updatewindowtype(c);
   }
+}
+
+void pushdown(const Arg *arg) {
+  Client *sel = selmon->sel, *c;
+
+  if (!sel || sel->isfloating || sel == nexttiled(selmon->clients))
+    return;
+  if ((c = nexttiled(sel->next))) {
+    detach(sel);
+    sel->next = c->next;
+    c->next = sel;
+  }
+  focus(sel);
+  arrange(selmon);
+}
+
+void pushup(const Arg *arg) {
+  Client *sel = selmon->sel, *c;
+
+  if (!sel || sel->isfloating)
+    return;
+  if ((c = prevtiled(sel)) && c != nexttiled(selmon->clients)) {
+    detach(sel);
+    sel->next = c;
+    for (c = selmon->clients; c->next != sel->next; c = c->next)
+      ;
+    c->next = sel;
+  }
+  focus(sel);
+  arrange(selmon);
 }
 
 void quit(const Arg *arg) {
