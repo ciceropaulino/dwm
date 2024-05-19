@@ -1,40 +1,50 @@
 --- dwm.c
 +++ dwm.c
-@@ -88,6 +88,7 @@ struct Client {
- 	char name[256];
- 	float mina, maxa;
- 	int x, y, w, h;
-+	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
- 	int oldx, oldy, oldw, oldh;
- 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
- 	int bw, oldbw;
-@@ -1056,6 +1057,10 @@ manage(Window w, XWindowAttributes *wa)
- 	updatewindowtype(c);
- 	updatesizehints(c);
- 	updatewmhints(c);
-+	c->sfx = c->x;
-+	c->sfy = c->y;
-+	c->sfw = c->w;
-+	c->sfh = c->h;
- 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
- 	grabbuttons(c, 0);
- 	if (!c->isfloating)
-@@ -1714,8 +1719,16 @@ togglefloating(const Arg *arg)
- 		return;
- 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
- 	if (selmon->sel->isfloating)
--		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
--			selmon->sel->w, selmon->sel->h, 0);
-+		/* restore last known float dimensions */
-+		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
-+		       selmon->sel->sfw, selmon->sel->sfh, False);
-+	else {
-+		/* save last known float dimensions */
-+		selmon->sel->sfx = selmon->sel->x;
-+		selmon->sel->sfy = selmon->sel->y;
-+		selmon->sel->sfw = selmon->sel->w;
-+		selmon->sel->sfh = selmon->sel->h;
+@@ -803,7 +804,13 @@ focus(Client *c)
+ 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+ 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
+ 	}
+-	selmon->sel = c;
++	if(selmon->sel && selmon->sel->isfullscreen){
++		togglefullscreen();
++		selmon->sel = c;
++		togglefullscreen();
++	}else{
++		selmon->sel = c;
 +	}
+ 	drawbars();
+ }
+ 
+@@ -1723,6 +1730,14 @@ togglefloating(const Arg *arg)
  	arrange(selmon);
  }
  
++void
++togglefullscreen()
++{
++	if (selmon->sel){
++		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
++	}
++}
++
+ void
+ toggletag(const Arg *arg)
+ {
+@@ -1768,6 +1783,7 @@ unmanage(Client *c, int destroyed)
+ {
+ 	Monitor *m = c->mon;
+ 	XWindowChanges wc;
++	int fullscreen = (selmon->sel == c && selmon->sel->isfullscreen)?1:0;
+ 
+ 	detach(c);
+ 	detachstack(c);
+@@ -1784,6 +1800,9 @@ unmanage(Client *c, int destroyed)
+ 	}
+ 	free(c);
+ 	focus(NULL);
++	if(fullscreen){
++		togglefullscreen();
++	}
+ 	updateclientlist();
+ 	arrange(m);
+ }
