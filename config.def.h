@@ -44,8 +44,8 @@ static const char *const autostart[] = {
 
 /* tagging */
 // static const char *tags[] = {"", "2", "3", "4", "5", "6", "7", "8", "9"};
-static const char *tags[] = {"", "", "", "", "",
-                             "", "", "", ""};
+static const char *tags[] = {"", "", "", "", "",
+                             "", "", "", ""};
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -64,8 +64,9 @@ static const Rule rules[] = {
     /* class      instance    title       tags mask     isfloating   monitor */
     {"kitty", NULL, NULL, 1 << 1, 0, -1},
     {"firefox", NULL, NULL, 1 << 0, 0, -1},
-    {"discord", NULL, NULL, 1 << 7, 0, -1},
-    {"Spotify", NULL, NULL, 1 << 8, 0, -1},
+    {"discord", NULL, NULL, 1 << 6, 0, -1},
+    {"Spotify", NULL, NULL, 1 << 7, 0, -1},
+    {"thunar", NULL, NULL, 1 << 3, 0, -1},
 
 };
 
@@ -115,7 +116,8 @@ static const char *dmenucmd[] = {
     "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
 static const char *termcmd[] = {"kitty", NULL};
-static const char *rofi[] = {"rofi", "-show", "drun", NULL};
+static const char *rofi[] = {
+    "zsh", "/home/comrade/.config/rofi/launchers/type-6/launcher.sh", NULL};
 
 static const Key keys[] = {
     /* modifier                     key        function        argument */
