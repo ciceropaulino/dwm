@@ -38,7 +38,7 @@ static const unsigned int alphas[][3] = {
 };
 
 static const char *const autostart[] = {
-    "picom", "-b", NULL, "zsh", "/home/comrade/fehbg.sh",
+    "picom", "-b", NULL, "zsh", "/home/comrade/.fehbg",
     NULL,    NULL /* terminate */
 };
 
