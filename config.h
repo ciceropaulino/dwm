@@ -38,7 +38,7 @@ static const unsigned int alphas[][3] = {
 };
 
 static const char *const autostart[] = {
-    "picom", "-b", NULL, "zsh", "/home/comrade/fehbg.sh",
+    "picom", "-b", NULL, "zsh", "/home/comrade/.fehbg",
     NULL,    NULL /* terminate */
 };
 
@@ -64,8 +64,9 @@ static const Rule rules[] = {
     /* class      instance    title       tags mask     isfloating   monitor */
     {"kitty", NULL, NULL, 1 << 1, 0, -1},
     {"firefox", NULL, NULL, 1 << 0, 0, -1},
-    {"discord", NULL, NULL, 1 << 7, 0, -1},
-    {"Spotify", NULL, NULL, 1 << 8, 0, -1},
+    {"discord", NULL, NULL, 1 << 6, 0, -1},
+    {"Spotify", NULL, NULL, 1 << 7, 0, -1},
+    {"thunar", NULL, NULL, 1 << 3, 0, -1},
 
 };
 
