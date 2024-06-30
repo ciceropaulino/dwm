@@ -1,16 +1,17 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx = 1; /* border pixel of windows */
-static const unsigned int gappx = 5;    /* gaps between windows */
+static const unsigned int borderpx = 2; /* border pixel of windows */
+static const unsigned int gappx = 7;    /* gaps between windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int showbar = 1;           /* 0 means no bar */
 static const int topbar = 1;            /* 0 means bottom bar */
 static const int horizpadbar = 2;       /* horizontal padding for statusbar */
-static const int vertpadbar = 8;        /* vertical padding for statusbar */
+static const int vertpadbar = 10;       /* vertical padding for statusbar */
 static const char *fonts[] = {
-    "Monolisa:size=12",
-    "Phosphor:style=regular:pixelsize=18:antialias=true:autohint=true"};
+    "SFMono Nerd Font "
+    "Mono:style=Regular:pixelsize=16:antialias=true:autohint=true",
+    "Phosphor-Fill:style=Fill:pixelsize=20:antialias=true:autohint=true"};
 static const char dmenufont[] = "monospace:size=10";
 // delete this after delete dmenu
 static const char col_gray1[] = "#000000"; /*black bg normal mod*/
@@ -38,14 +39,13 @@ static const unsigned int alphas[][3] = {
 };
 
 static const char *const autostart[] = {
-    "picom", "-b", NULL, "zsh", "/home/comrade/.fehbg",
-    NULL,    NULL /* terminate */
+    "zsh", "/home/comrade/.autostart_dwm.sh", NULL /* terminate */
 };
 
 /* tagging */
 // static const char *tags[] = {"", "2", "3", "4", "5", "6", "7", "8", "9"};
-static const char *tags[] = {"", "", "", "", "",
-                             "", "", "", ""};
+static const char *tags[] = {"", "", "", "", "",
+                             "", "", "", ""};
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -64,8 +64,8 @@ static const Rule rules[] = {
     /* class      instance    title       tags mask     isfloating   monitor */
     {"kitty", NULL, NULL, 1 << 1, 0, 0, -1},
     {"firefox", NULL, NULL, 1 << 0, 0, 0, -1},
-    {"discord", NULL, NULL, 1 << 6, 0, 0, -1},
-    {"Spotify", NULL, NULL, 1 << 7, 0, 0, -1},
+    {"discord", NULL, NULL, 1 << 7, 0, 0, -1},
+    {"Spotify", NULL, NULL, 1 << 8, 0, 0, -1},
     {"thunar", NULL, NULL, 1 << 3, 0, 0, -1},
 
 };
@@ -87,11 +87,11 @@ static const int lockfullscreen =
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {"| ", tile}, /* first entry is default */
-    {"| ", NULL}, /* no layout function means floating behavior */
-    {"| ", monocle},
-    {"| ", centeredmaster},
-    {"| ", centeredfloatingmaster},
+    {"|  ", tile}, /* first entry is default */
+    {"|  ", NULL}, /* no layout function means floating behavior */
+    {"|  ", monocle},
+    {"|  ", centeredmaster},
+    {"|  ", centeredfloatingmaster},
     {NULL, NULL},
 };
 
@@ -117,7 +117,7 @@ static const char *dmenucmd[] = {
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
 static const char *termcmd[] = {"kitty", NULL};
 static const char *rofi[] = {
-    "zsh", "/home/comrade/.config/rofi/launchers/type-6/launcher.sh", NULL};
+    "zsh", "/home/comrade/.config/rofi/launchers/type-7/launcher.sh", NULL};
 
 static const Key keys[] = {
     /* modifier                     key        function        argument */
