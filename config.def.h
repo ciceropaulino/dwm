@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx = 2; /* border pixel of windows */
-static const unsigned int gappx = 9;    /* gaps between windows */
+static const unsigned int borderpx = 1; /* border pixel of windows */
+static const unsigned int gappx = 10;   /* gaps between windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int showbar = 1;           /* 0 means no bar */
 static const int topbar = 1;            /* 0 means bottom bar */
@@ -44,8 +44,8 @@ static const char *const autostart[] = {
 
 /* tagging */
 // static const char *tags[] = {"", "2", "3", "4", "5", "6", "7", "8", "9"};
-static const char *tags[] = {"", "", "", "", "",
-                             "", "", "", ""};
+static const char *tags[] = {"", "", "", "", "",
+                             "", "", "", ""};
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -62,11 +62,13 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class      instance    title       tags mask     isfloating   monitor */
-    {"kitty", NULL, NULL, 1 << 1, 0, 0, -1},
-    {"firefox", NULL, NULL, 1 << 0, 0, 0, -1},
+    {"kitty", NULL, NULL, 1 << 0, 0, 0, -1},
+    {"firefox", NULL, NULL, 1 << 5, 0, 0, -1},
+    {"Chromium", NULL, NULL, 1 << 5, 0, 0, -1},
     {"discord", NULL, NULL, 1 << 7, 0, 0, -1},
     {"Spotify", NULL, NULL, 1 << 8, 0, 0, -1},
-    {"thunar", NULL, NULL, 1 << 3, 0, 0, -1},
+    {"Thunar", NULL, NULL, 1 << 4, 0, 0, -1},
+    {"Obsidian", NULL, NULL, 1 << 6, 0, 0, -1},
 
 };
 
@@ -87,11 +89,11 @@ static const int lockfullscreen =
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {"|  ", tile}, /* first entry is default */
-    {"|  ", NULL}, /* no layout function means floating behavior */
-    {"|  ", monocle},
-    {"|  ", centeredmaster},
-    {"|  ", centeredfloatingmaster},
+    {"   ", tile}, /* first entry is default */
+    {"   ", NULL}, /* no layout function means floating behavior */
+    {"   ", monocle},
+    {"   ", centeredmaster},
+    {"   ", centeredfloatingmaster},
     {NULL, NULL},
 };
 
@@ -118,12 +120,16 @@ static const char *dmenucmd[] = {
 static const char *termcmd[] = {"kitty", NULL};
 static const char *rofi[] = {
     "zsh", "/home/comrade/.config/rofi/launchers/type-7/launcher.sh", NULL};
-
+// static const char *firefox[] = {"firefox", NULL};
+static const char *chromium[] = {"chromium", NULL};
+static const char *thunar[] = {"thunar", NULL};
 static const Key keys[] = {
     /* modifier                     key        function        argument */
     //    {MODKEY, XK_p, spawn, {.v = dmenucmd}},
     {MODKEY, XK_p, spawn, {.v = rofi}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmd}},
+    {MODKEY | ShiftMask, XK_b, spawn, {.v = chromium}},
+    {MODKEY | ShiftMask, XK_f, spawn, {.v = thunar}},
     {MODKEY, XK_b, togglebar, {0}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
